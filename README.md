@@ -27,6 +27,16 @@ Place this in the same directory as InfobloxClient.py
 
 ## Functions
 
+#### Gets
+
 `get_ext_attrs(self, attr_name)`
 
 Pass the extensible attribute name into this. The extensible attribute must be a list type. It will return all values associated with that extensible attribute
+
+------------
+
+
+#### Puts
+`add_ext_attr_values(self, attr_name, *args)`
+
+Pass the extensible attribute name into the attr_name parameter. The args are going to be values to add to the extensible attribute
