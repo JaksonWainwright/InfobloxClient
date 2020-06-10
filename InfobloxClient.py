@@ -62,8 +62,16 @@ class InfobloxClient:
         uri = self.return_ext_attr_ref(attr_name)
         return self.send_put_request(uri, put_dict)
 
-    def get_next_ip(self, subnet):
-        return 'To do'
+    def get_unused_ips(self, subnet):
+        return_list = []
+        uri = f'ipv4address?network={subnet}&status=UNUSED&_return_as_object=1'
+        for key in self.send_get_request(uri)['result']:
+            return_list.append({key['_ref']: key['ip_address']})
+        return return_list
+
+    def get_next_unused_ip(self, subnet):
+        unused_ips = self.get_unused_ips(subnet)
+        return unused_ips[0]
 
     def reserve_ip(self, ip):
         return 'To do '
@@ -81,4 +89,4 @@ class InfobloxClient:
         return 'To do'
 
     def test_func(self):
-        print(self.add_ext_attr_values('Program Name', 'test5', 'test7', 'test4' ))
+        print(self.get_next_unused_ip(infoblox_vars.infoblox_url_ip_block))
