@@ -3,7 +3,7 @@ from conf import infoblox_vars
 from requests.auth import HTTPBasicAuth
 
 
-class InfobloxConnector:
+class InfobloxClient:
     def __init__(self):
         self.infoblox_base_url = infoblox_vars.infoblox_base_url
         self.infoblox_user = infoblox_vars.infoblox_user
