@@ -62,7 +62,7 @@ class InfobloxClient:
         uri = self.return_ext_attr_ref(attr_name)
         return self.send_put_request(uri, put_dict)
 
-    def get_next_ip(self):
+    def get_next_ip(self, subnet):
         return 'To do'
 
     def reserve_ip(self, ip):
