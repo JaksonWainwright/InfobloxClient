@@ -1,5 +1,5 @@
-import InfobloxConnector
+import InfobloxClient
 
-infoblox_connection = InfobloxConnector.InfobloxConnector()
+infoblox_connection = InfobloxClient.InfobloxClient()
 
 infoblox_connection.test_func()
