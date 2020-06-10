@@ -29,9 +29,14 @@ Place this in the same directory as InfobloxClient.py
 
 #### Gets
 
-`get_ext_attrs(self, attr_name)`
+`get_ext_attrs(attr_name)`
 
 Pass the extensible attribute name into this. The extensible attribute must be a list type. It will return all values associated with that extensible attribute
+
+`def get_next_unused_ip(subnet)`
+
+Pass subnet in as parameter. Ideally, subnet to be assigned in the conf.py file, so as to assign IP blocks to notable, human readable categories. Then use that as the subnet parameter. This function will return the object reference, and next available IP for that subnet 
+
 
 ------------
 
