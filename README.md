@@ -51,6 +51,3 @@ Pass the extensible attribute name into the attr_name parameter. The args are go
 
 
 #### Deletes
-`add_ext_attr_values(self, attr_name, *args)`
-
-Pass the extensible attribute name into the attr_name parameter. The args are going to be values to add to the extensible attribute
