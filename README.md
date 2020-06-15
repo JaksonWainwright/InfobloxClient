@@ -1,13 +1,11 @@
 ### Features
 
 1. Get extensible Attributes  and store corresponding values in a list
-2. Set extensible Attributes
+2. Set extensible Attribute's values
 3. Get next available IP for a certain block
 4. Set a host record for an IP address
-5. Reserve an IP address
-6. Remove an extensible attribute
-7. Unreserve and IP address
-8. Remove a host record
+5. Remove extensible attribute values
+6. Remove a host record
 
 # Infoblox Client
 ## Initializing Class
@@ -50,3 +48,9 @@ Pass the extensible attribute name into the attr_name parameter. The args are go
 `remove_ext_attr_values(self, attr_name, *args)`
 
 Pass the extensible attribute name into the attr_name parameter. The args are going to be values to remove from extensible attribute.
+
+
+#### Deletes
+`add_ext_attr_values(self, attr_name, *args)`
+
+Pass the extensible attribute name into the attr_name parameter. The args are going to be values to add to the extensible attribute

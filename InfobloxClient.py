@@ -117,14 +117,13 @@ class InfobloxClient:
 
     def get_host_ip_ref(self, host):
         uri = f"record:host?name={host}"
-        print(uri)
         host_record = self.send_get_request(uri)
-        print(host_record)
         ip = host_record['ipv4addrs'][0]['ipv4addr']
         ip_ref_id = self.send_get_request(f"ipv4address?ip_address={ip}")['_ref']
-        print(ip_ref_id)
-        self.send_delete_request(ip_ref_id)
         return ip_ref_id
 
+    def delete_host_record(self, uri):
+        print('todo')
+
     def test_func(self):
-        print(self.get_host_ip_ref('test.pd.gpsrv.com'))
+        print(self.get_host_ip_ref('pd.gpsrv.com'))
