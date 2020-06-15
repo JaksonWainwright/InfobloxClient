@@ -10,23 +10,26 @@ class InfobloxClient:
         self.infoblox_password = infoblox_vars.infoblox_pass
         self.url_ip_block = infoblox_vars.infoblox_url_ip_block
         self.headers = {"Content_Type": "application/json"}
+        self.http_auth = HTTPBasicAuth(infoblox_vars.infoblox_user, infoblox_vars.infoblox_pass)
 
     def send_get_request(self, uri, *args):
         if args:
             request = requests.get(f'{self.infoblox_base_url}{uri}', headers=self.headers, verify=False,
-                                   auth=HTTPBasicAuth(infoblox_vars.infoblox_user,
-                                                      infoblox_vars.infoblox_pass), data=args[0])
+                                   auth=self.http_auth, data=args[0])
         else:
             request = requests.get(f'{self.infoblox_base_url}{uri}', headers=self.headers, verify=False,
-                                   auth=HTTPBasicAuth(infoblox_vars.infoblox_user,
-                                                      infoblox_vars.infoblox_pass))
+                                   auth=self.http_auth)
         response = json.loads(request.text.strip('[]'))
         return response
 
     def send_put_request(self, uri, data):
         request = requests.put(f'{self.infoblox_base_url}{uri}', headers=self.headers, verify=False,
-                               auth=HTTPBasicAuth(infoblox_vars.infoblox_user,
-                                                  infoblox_vars.infoblox_pass), data=data)
+                               auth=self.http_auth, data=data)
+        return request.text
+
+    def send_post_request(self, uri, data):
+        request = requests.post(f'{self.infoblox_base_url}{uri}', headers=self.headers, verify=False,
+                                auth=self.http_auth, data=data)
         return request.text
 
     def get_ext_attr(self, attr_name):
@@ -48,9 +51,7 @@ class InfobloxClient:
         put_dict = {
             "name": attr_name,
             "type": "ENUM",
-            "list_values":[
-
-            ]
+            "list_values": []
 
         }
         for value in self.return_ext_attr_values(attr_name):
@@ -62,7 +63,7 @@ class InfobloxClient:
         uri = self.return_ext_attr_ref(attr_name)
         return self.send_put_request(uri, put_dict)
 
-    def get_unused_ips(self, subnet):
+    def get_all_unused_ips(self, subnet):
         return_list = []
         uri = f'ipv4address?network={subnet}&status=UNUSED&_return_as_object=1'
         for key in self.send_get_request(uri)['result']:
@@ -70,17 +71,45 @@ class InfobloxClient:
         return return_list
 
     def get_next_unused_ip(self, subnet):
-        unused_ips = self.get_unused_ips(subnet)
+        unused_ips = self.get_all_unused_ips(subnet)
         return unused_ips[0]
 
-    def reserve_ip(self, ip):
-        return 'To do '
+    def create_host_record(self, subnet, host):
+        post_data = {
+            "name": host,
+            "configure_for_dns": False,
+            "ipv4addrs": [
+                {
+                    "ipv4addr": f"func:nextavailableip:{subnet}"
+                }
+            ]
+        }
+        return self.send_post_request('record:host', json.dumps(post_data))
 
-    def create_host_record(self, ip):
-        return 'To do'
+    def return_ext_attr_dict(self, attr_name):
+        attr_value_list = self.return_ext_attr_values(attr_name)
+        value_dict = {
+            "name": attr_name,
+            "type": "ENUM",
+            "list_values": []
 
-    def remove_ext_attr(self, attr):
-        return 'To do '
+        }
+        for value in attr_value_list:
+            value_dict['list_values'].append({"value": value})
+        value_dict = str(value_dict).replace("\'", "\"")
+        uri = self.return_ext_attr_ref(attr_name)
+        return value_dict, uri
+
+    def remove_ext_attr_values(self, attr_name, *args):
+        existing_values = json.loads(self.return_ext_attr_dict(attr_name)[0])
+        ext_attr_ref_id = self.return_ext_attr_dict(attr_name)[1]
+        for index, value in enumerate(existing_values['list_values']):
+            for arg in args:
+                if arg == existing_values['list_values'][index]['value']:
+                    del existing_values["list_values"][index]
+        existing_values = str(existing_values).replace("\'", "\"")
+        return self.send_put_request(ext_attr_ref_id, existing_values)
+
 
     def unreserve_ip(self, ip):
         return 'To do'
@@ -89,4 +118,4 @@ class InfobloxClient:
         return 'To do'
 
     def test_func(self):
-        print(self.get_next_unused_ip(infoblox_vars.infoblox_url_ip_block))
+        print(self.remove_ext_attr_values('Program Name', 'test2', 'test3', 'test4', 'test5', 'test7'))

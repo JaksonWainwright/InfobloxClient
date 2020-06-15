@@ -31,7 +31,8 @@ Place this in the same directory as InfobloxClient.py
 
 `get_ext_attrs(attr_name)`
 
-Pass the extensible attribute name into this. The extensible attribute must be a list type. It will return all values associated with that extensible attribute
+Pass the extensible attribute name into this. The name needs to be a string. The extensible attribute must be a list type. It will return all values associated with that extensible attribute as a list. 
+Note that the return value's first index will always be the Ref ID. (needed for put/post's)
 
 `def get_next_unused_ip(subnet)`
 
