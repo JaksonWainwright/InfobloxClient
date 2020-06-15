@@ -32,6 +32,11 @@ class InfobloxClient:
                                 auth=self.http_auth, data=data)
         return request.text
 
+    def send_delete_request(self, uri):
+        request = requests.delete(f'{self.infoblox_base_url}{uri}', headers=self.headers, verify=False,
+                                  auth=self.http_auth)
+        return request.text
+
     def get_ext_attr(self, attr_name):
         ext_atrr_values = []
         data = json.dumps({"name": attr_name})
@@ -110,12 +115,16 @@ class InfobloxClient:
         existing_values = str(existing_values).replace("\'", "\"")
         return self.send_put_request(ext_attr_ref_id, existing_values)
 
-
-    def unreserve_ip(self, ip):
-        return 'To do'
-
-    def remove_host_record(self):
-        return 'To do'
+    def get_host_ip_ref(self, host):
+        uri = f"record:host?name={host}"
+        print(uri)
+        host_record = self.send_get_request(uri)
+        print(host_record)
+        ip = host_record['ipv4addrs'][0]['ipv4addr']
+        ip_ref_id = self.send_get_request(f"ipv4address?ip_address={ip}")['_ref']
+        print(ip_ref_id)
+        self.send_delete_request(ip_ref_id)
+        return ip_ref_id
 
     def test_func(self):
-        print(self.remove_ext_attr_values('Program Name', 'test2', 'test3', 'test4', 'test5', 'test7'))
+        print(self.get_host_ip_ref('test.pd.gpsrv.com'))
