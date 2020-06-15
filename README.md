@@ -46,3 +46,7 @@ Pass subnet in as parameter. Ideally, subnet to be assigned in the conf.py file,
 `add_ext_attr_values(self, attr_name, *args)`
 
 Pass the extensible attribute name into the attr_name parameter. The args are going to be values to add to the extensible attribute
+
+`remove_ext_attr_values(self, attr_name, *args)`
+
+Pass the extensible attribute name into the attr_name parameter. The args are going to be values to remove from extensible attribute.
